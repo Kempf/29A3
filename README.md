@@ -9,3 +9,11 @@ ENGN2229 Assignment 3 by Paul Apelt and Stephen Lonergan.
 *   dt - time step of the solutions
 *   p0 - starting roll angle (rad)
 *   w0 - starting angular velocity (rad/tick)
+
+`pmap( a, tol, dt, dw )` - Poincare map:
+*   a - angle of attack (rad)
+*   tol - omega tolerance
+*   dt - time step of the solutions
+*   dw - resolution of the p-map
+
+See `traj.txt` for notable trajectories and points of interest.
