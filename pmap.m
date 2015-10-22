@@ -1,5 +1,5 @@
 function [  ] = pmap( a, tol, dt, dw )
-%SOLN Solves the wing rock ODE and plots a phase map.
+%PMAP Plots a Poincare map for the wing rock ODE.
 %   a - angle of attack (rad)
 %   tol - omega tolerance
 %   dt - time step of the solutions
