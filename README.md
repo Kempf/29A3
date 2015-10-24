@@ -5,7 +5,7 @@ ENGN2229 Assignment 3 by Paul Apelt and Stephen Lonergan. Wing rock ODE analysis
 
 See `traj.txt` for notable trajectories, usage examples and points of interest. Seriously, just do it. It won't run properly with random parameters.
 
-###Functions:
+###Functions
 
 `soln( a, n, l, dt, p0, w0 )` - Phase map and trajectory plotting:
 
