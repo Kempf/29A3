@@ -1,9 +1,9 @@
 function [  ] = soln( a, n, l, dt, p0, w0 )
 %SOLN Solves the wing rock ODE and plots a phase map.
 %   a - angle of attack (rad)
-%   n - resolution of the phase map
-%   l - number of solutions to compute
-%   dt - time step of the solutions
+%   n - resolution of the phase map (10)
+%   l - number of solutions to compute (100-10K)
+%   dt - time step of the solutions (0.1-0.01)
 %   p0 - starting roll angle (rad)
 %   w0 - starting angular velocity (rad/tick)
     % Initialize stability derivatives

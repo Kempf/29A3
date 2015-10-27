@@ -1,11 +1,12 @@
-function [  ] = lcyc( a0, af, da, tol, dt, dw )
+function [  ] = lcyc( a0, af, da, tol, dt, dw, wtol )
 %LCYC Plots limit cycle location for a given range of AoE.
-%   a0, af - angle of attack range
-%   da - angle of attack step
-%   tol - omega tolerance
-%   dt - time step of the solutions
-%   dw - resolution of the p-map
-    % Initialize stability derivatives
+%   a0, af - angle of attack range (0, pi/2)
+%   da - angle of attack step (pi/250)
+%   tol - omega tolerance (0.01)
+%   dt - time step of the solutions (0.01)
+%   dw - resolution of the p-map (0.01)
+%   wtol - limit cycle omega tolerance (0.001)
+    % Initialize stability derivatives 
     tau = 0.5;
     c1 = 0.2;
     c2 = -0.1;
@@ -37,7 +38,7 @@ function [  ] = lcyc( a0, af, da, tol, dt, dw )
                 end
             end
             % Detect limit cycle
-            if((abs(w0-X(2,k)) < tol) && (w0 > tol))
+            if((abs(w0-X(2,k)) < wtol) && (w0 > tol))
                 R = [R [a; X(2,k)]];
             else
                 R = [R [a; NaN]];
