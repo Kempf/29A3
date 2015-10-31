@@ -48,5 +48,11 @@ function [  ] = soln( a, n, l, dt, p0, w0 )
     scatter(p0,w0,'ko');
     scatter(X(1,l),X(2,l),'ks');
     scatter(X(1,:),X(2,:),'b.');
-end
+    
 
+    syms lambda
+    eqn = lambda^2 - (lambda*tau*(f+p0^2*g)) - (2*tau*w0*p0*g + sin(a)*(c5 + 3 * p0^2 * h)) == 0;
+    sollamb = solve(eqn,lambda);
+    r = double(sollamb);
+    disp(r);
+end
