@@ -1,13 +1,14 @@
-function [  ] = soln( a, n, l, dt, p0, w0, dw, tol )
-%SOLN Solves the wing rock ODE and plots a phase map.
+% ENGN2229 A3 u5568225 u5349877
+function [  ] = comp( a, n, l, dt, p0, w0, dw, tol )
+%COMP Solves the wing rock ODE, plots phase and Poincare maps, calculates Jacobian eigenvalues.
 %   a - angle of attack (rad)
 %   n - resolution of the phase map (10)
 %   l - number of solutions to compute (100-10K)
 %   dt - time step of the solutions (0.1-0.01)
 %   p0 - starting roll angle (rad)
 %   w0 - starting angular velocity (rad/tick)
-%   tol - omega tolerance (0.01)
 %   dw - resolution of the p-map (0.01)
+%   tol - omega tolerance (0.01)
     % Initialize stability derivatives
     tau = 0.5;
     c1 = 0.2;
@@ -31,6 +32,7 @@ function [  ] = soln( a, n, l, dt, p0, w0, dw, tol )
         dotp(i) = w(i);
         dotw(i) = tau*(f+g*p(i)^2)*w(i)+sin(a)*(c5+h*p(i)^2)*p(i);
     end
+    % Plot the phase map
     close all;
     figure;
     quiver(p, w, dotp, dotw, 'red');
@@ -39,7 +41,7 @@ function [  ] = soln( a, n, l, dt, p0, w0, dw, tol )
     ylabel('\omega');
     title(['Phase map for \alpha = ' num2str(a)]);
     hold on;
-    % Calculate trajectories using Euler's
+    % Calculate trajectories using Euler
     X = [[p0; w0] zeros(2,l-1)];
     for k = 1:l-1
         if((X(1,k) > pi) || (X(1,k) < -pi))
@@ -68,7 +70,6 @@ function [  ] = soln( a, n, l, dt, p0, w0, dw, tol )
                 X(1,k) = - X(1,k);
             end
             X(:,k+1) = X(:,k)+dt*[X(2,k);tau*(f+g*X(1,k)^2)*X(2,k)+sin(a)*(c5+h*X(1,k)^2)*X(1,k);];
-            %fprintf('k=%d p=%.2f w=%.2f w0=%.2f\n',k,X(1,k),X(2,k),w0);
             k = k+1;
             % Just give up already
             if(k>1000/dt)
@@ -76,13 +77,14 @@ function [  ] = soln( a, n, l, dt, p0, w0, dw, tol )
                 break;
             end
         end
+        % Ouput progress
         rem = repmat('\b',1,length(str)-1);
         str = [num2str(w0*100,'%.0f') '%%'];
         fprintf([rem str]);
         R = [R [w0; X(2,k)]];
     end
     fprintf('\n Done!\n');
-    close all;
+    % Plot Poincare map
     figure;
     scatter(R(1,:),R(2,:),'b.');
     hold on;
