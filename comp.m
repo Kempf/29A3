@@ -1,13 +1,13 @@
-function [  ] = comp( a, n, l, dt, p0, w0, tol, dw )
-%COMP Combination of phase map and Poincare map.
+function [  ] = soln( a, n, l, dt, p0, w0, dw, tol )
+%SOLN Solves the wing rock ODE and plots a phase map.
 %   a - angle of attack (rad)
-%   n - resolution of the phase map
-%   l - number of solutions to compute
-%   dt - time step of the solutions
+%   n - resolution of the phase map (10)
+%   l - number of solutions to compute (100-10K)
+%   dt - time step of the solutions (0.1-0.01)
 %   p0 - starting roll angle (rad)
 %   w0 - starting angular velocity (rad/tick)
-%   tol - omega tolerance
-%   dw - resolution of the p-map
+%   tol - omega tolerance (0.01)
+%   dw - resolution of the p-map (0.01)
     % Initialize stability derivatives
     tau = 0.5;
     c1 = 0.2;
@@ -50,9 +50,16 @@ function [  ] = comp( a, n, l, dt, p0, w0, tol, dw )
     scatter(p0,w0,'ko');
     scatter(X(1,l),X(2,l),'ks');
     scatter(X(1,:),X(2,:),'b.');
-    hold off;
-    % P-Map
+    % Calculate eigenvalues
+    syms lambda
+    eqn = lambda^2 - (lambda*tau*(f+p0^2*g)) - (2*tau*w0*p0*g + sin(a)*(c5 + 3 * p0^2 * h)) == 0;
+    sollamb = solve(eqn,lambda);
+    r = double(sollamb);
+    disp(r);
+    % Produce Poincare map
     R = [];
+    fprintf('\nP-Map...\t');
+    str = '';
     for w0 = 0:dw:1
         k = 1;
         X = [0; w0];
@@ -61,15 +68,21 @@ function [  ] = comp( a, n, l, dt, p0, w0, tol, dw )
                 X(1,k) = - X(1,k);
             end
             X(:,k+1) = X(:,k)+dt*[X(2,k);tau*(f+g*X(1,k)^2)*X(2,k)+sin(a)*(c5+h*X(1,k)^2)*X(1,k);];
-            % fprintf('k=%d p=%.2f w=%.2f w0=%.2f\n',k,X(1,k),X(2,k),w0);
+            %fprintf('k=%d p=%.2f w=%.2f w0=%.2f\n',k,X(1,k),X(2,k),w0);
             k = k+1;
+            % Just give up already
             if(k>1000/dt)
                 X(2,k) = NaN;
                 break;
             end
         end
+        rem = repmat('\b',1,length(str)-1);
+        str = [num2str(w0*100,'%.0f') '%%'];
+        fprintf([rem str]);
         R = [R [w0; X(2,k)]];
     end
+    fprintf('\n Done!\n');
+    close all;
     figure;
     scatter(R(1,:),R(2,:),'b.');
     hold on;
@@ -79,4 +92,3 @@ function [  ] = comp( a, n, l, dt, p0, w0, tol, dw )
     title(['Poincare map for \alpha = ' num2str(a)]);
     hold off;
 end
-
